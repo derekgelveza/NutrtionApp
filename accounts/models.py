@@ -2,11 +2,11 @@ from django.db import models
 
 class Customer(models.Model):
     ACTIVITY_LEVEL = (
-        ('Sedentary', 'Sedentary'),
-        ('Lightly Active', 'Lightly Active'),
-        ('Moderately Active', 'Moderately Active'),
-        ('Very Active', 'Very Active'),
-        ('Extra Active', 'Extra Active'),
+        ('sedentary', 'Sedentary'),
+        ('light', 'Lightly Active'),
+        ('moderate', 'Moderately Active'),
+        ('active', 'Very Active'),
+        ('very-active', 'Extra Active'),
     )
 
     GENDER = (
@@ -28,7 +28,7 @@ class Customer(models.Model):
 
 
     def __str__(self):
-        return self.name
+        return self.name if self.name else "Unnamed Customer"
 
 class Progress(models.Model):
     customer = models.ForeignKey(Customer, null=True, on_delete=models.SET_NULL)

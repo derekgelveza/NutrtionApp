@@ -6,7 +6,8 @@
     <h1>Calorie Calculator</h1>
     <h3>The following can be used to get an estimate of the number of calories a person needs to consume each day. The calcuator can also provide guidlines for gainaing, maintaining, or losing weight</h3>
     <div class="form-conatiner">
-        <form action="/calculate" method="POST">
+        <form method="POST">
+            {% csrf_token %}
             <label for="age">Age:</label>
             <input type="number" id="age" name="age"><br><br>
 
@@ -35,6 +36,11 @@
 
             <button type="submit">Submit Form</button>
         </form>
+        {% if calories %}
+            <div class="result">
+                <h3>Your estimated daily calorie needs: {{ calories }} kcal</h3>
+            </div>
+        {% endif %}
     </div>
 </div>
 
