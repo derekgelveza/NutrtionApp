@@ -31,6 +31,6 @@ class Customer(models.Model):
         return self.name
 
 class Progress(models.Model):
-    name = models.ForeignKey(Customer, null=True, on_delete=models.SET_NULL)
+    customer = models.ForeignKey(Customer, null=True, on_delete=models.SET_NULL)
     weight = models.FloatField(null=True)
     date_recorded = models.DateTimeField(auto_now_add=True)
