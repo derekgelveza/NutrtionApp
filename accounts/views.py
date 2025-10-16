@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from datetime import datetime, date
 from .models import *
 from .utils import calculate_calories
 
@@ -8,23 +9,37 @@ def home(request):
     calories = None
 
     if request.method == 'POST':
-        age = int(request.POST.get('age', 0))
+        first_name = str(request.POST.get('first-name', ''))
+        last_name = str(request.POST.get('last-name', ''))
+        email = str(request.POST.get('email', ''))
+        username = str(request.POST.get('username'))
         gender = request.POST.get('gender')
         height = float(request.POST.get('height', 0))
         weight = float(request.POST.get('weight', 0))
         activity = request.POST.get('activity')
+        birthday_str = request.POST.get('birthday')
 
-        print("Form data:", age, gender, height, weight, activity)  # 👈 this line helps debug
+        age = None
+        if birthday_str:
+            birthday = datetime.strptime(birthday_str, '%Y-%m-%d').date()
+            today = date.today()
+            age = today.year - birthday.year - ((today.month, today.day) < (birthday.month, birthday.day))
+
+
+        print("Form data:", first_name, last_name, email, username, age, gender, height, weight, activity, birthday_str, age)  # this line helps debug
 
         # Make sure all values are present and valid
         if all([age, gender, height, weight, activity]):
-            age = int(age)
             height = float(height)
             weight = float(weight)
 
             calories = calculate_calories(int(age), gender, float(height), float(weight), activity)
 
             customer = Customer.objects.create(
+                first_name=first_name,
+                last_name=last_name,
+                email=email,
+                username=username,
                 age=age,
                 gender=gender.capitalize(),
                 height=height,

@@ -3,10 +3,10 @@ from django.db import models
 class Customer(models.Model):
     ACTIVITY_LEVEL = (
         ('sedentary', 'Sedentary'),
-        ('light', 'Lightly Active'),
-        ('moderate', 'Moderately Active'),
-        ('active', 'Very Active'),
-        ('very-active', 'Extra Active'),
+        ('light', 'Light'),
+        ('moderate', 'Moderate'),
+        ('active', 'Active'),
+        ('very-active', 'Very active'),
     )
 
     GENDER = (
@@ -15,8 +15,10 @@ class Customer(models.Model):
     )
 
 
-    name = models.CharField(max_length=200, null=True)
+    first_name = models.CharField(max_length=50, null=True)
+    last_name = models.CharField(max_length=50, null=True)
     email = models.CharField(max_length=200, null=True)
+    username = models.CharField(max_length=20, null=True)
     age = models.IntegerField(null=True)
     gender = models.CharField(max_length=200, null=True, choices=GENDER)
     weight = models.FloatField(null=True)
@@ -28,7 +30,9 @@ class Customer(models.Model):
 
 
     def __str__(self):
-        return self.name if self.name else "Unnamed Customer"
+        if self.first_name and self.last_name:
+            return f"{self.first_name} {self.last_name}".strip()
+        return" Unknown Customer"
 
 class Progress(models.Model):
     customer = models.ForeignKey(Customer, null=True, on_delete=models.SET_NULL)
