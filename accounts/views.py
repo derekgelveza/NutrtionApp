@@ -63,4 +63,9 @@ def products(request):
 def customer(request):
     return render(request, 'accounts/customer.html')
 
+def login(request):
+    return render(request, 'accounts/login.html')
+
+def registration(request):
+    return render(request, 'accounts/registration.html')
 

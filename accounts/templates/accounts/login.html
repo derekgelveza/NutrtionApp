@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="styles.css">
+  <script src="login.js" defer></script>
+  <title>Login</title>
+</head>
+<body>
+  <header>
+    <a href="#"><img src="#" alt="Logo"></a>
+    <nav>
+      <a href="registration.html">Registration</a>
+    </nav>
+  </header>
+
+  <main class="main-content">
+    <div class="registration-container">
+      <h1>Login:</h1>
+      <form id="login-form" method="POST">
+        <div class="tab active">
+          <label for="username">Username:</label>
+          <input type="text" id="username" name="username" required>
+
+          <label for="password">Password:</label>
+          <input type="password" id="password" name="password" required>
+
+          <p id="login-error" style="color:red; display:none;">
+            Invalid username or password. Please try again.
+          </p>
+
+          <div class="button-container" style="justify-content: center;">
+            <button type="submit" id="loginBtn">Login</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 NutriApp. All rights reserved.</p>
+  </footer>
+</body>
+</html>
