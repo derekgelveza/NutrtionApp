@@ -1,17 +1,18 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="styles.css">
-  <script src="login.js" defer></script>
+  <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+  <script src="{% static 'js/registration.js' %}" defer></script>
   <title>Login</title>
 </head>
 <body>
   <header>
     <a href="#"><img src="#" alt="Logo"></a>
     <nav>
-      <a href="registration.html">Registration</a>
+      <a href="{% url 'registration' %}">Registration</a>
     </nav>
   </header>
 

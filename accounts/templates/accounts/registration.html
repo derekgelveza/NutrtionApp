@@ -1,17 +1,19 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles.css">
-    <script src="registration.js" defer></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+    <script src="{% static 'js/registration.js' %}" defer></script>
     <title>Registration</title>
 </head>
 <body>
     <header>
         <a href="#"><img src="#" alt="Logo"></a>
         <nav>
-            <a href="login.html">Login</a>
+            <a href="{% url 'login' %}">Login</a>
          </nav>
     </header>
     
@@ -63,7 +65,6 @@
                 <label><input type="radio" name="gender" value="female"> Female</label>
             </div>
 
-            <!-- Step 3 -->
             <div class="tab">
                 <h2>Height, Weight, and Activity</h2>
                 <label for="height">Height (cm):</label>
@@ -83,7 +84,6 @@
                 </select>
             </div>
 
-            <!-- Navigation Buttons -->
             <div class="button-container">
                 <button type="button" id="prevBtn">Previous</button>
                 <button type="button" id="nextBtn">Next</button>

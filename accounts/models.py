@@ -19,6 +19,7 @@ class Customer(models.Model):
     last_name = models.CharField(max_length=50, null=True)
     email = models.CharField(max_length=200, null=True)
     username = models.CharField(max_length=20, null=True)
+    passwrod = models.CharField(max_length=50, null=True)
     age = models.IntegerField(null=True)
     gender = models.CharField(max_length=200, null=True, choices=GENDER)
     weight = models.FloatField(null=True)
