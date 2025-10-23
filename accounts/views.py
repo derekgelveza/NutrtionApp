@@ -67,8 +67,7 @@ def login(request):
     return render(request, 'accounts/login.html')
 
 def registration(request):
-    calories = None
-
+    
     if request.method == 'POST':
         first_name = str(request.POST.get('first-name', ''))
         last_name = str(request.POST.get('last-name', ''))
