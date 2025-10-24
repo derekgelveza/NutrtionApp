@@ -22,17 +22,22 @@
             <h1>Register:</h1>
 
             <form id="registration-form" method="POST">
+                {% csrf_token %}
             <!-- Step 1 -->
             <div class="tab active">
                 <h2>Name and Email</h2>
                 <label for="first-name">First Name:</label>
                 <input type="text" id="first-name" name="first-name" required>
+                
 
                 <label for="last-name">Last Name:</label>
                 <input type="text" id="last-name" name="last-name" required>
 
                 <label for="email">Email:</label>
                 <input type="email" id="email" name="email" required>
+                {% if errors.email %}
+                    <p style="color:red;">{{ errors.email }}</p>
+                {% endif %}
             </div>
 
             <div class="tab">
@@ -40,9 +45,15 @@
                 
                 <label for="username">Username:</label>
                 <input type="text" id="username" name="username" required>
+                {% if errors.username %}
+                    <p style="color:red;">{{ errors.username }}</p>
+                {% endif %}
 
                 <label for="password">Password:</label>
                 <input type="password" id="password" name="password" required>
+                {% if errors.password %}
+                    <p style="color:red;">{{ errors.password }}</p>
+                {% endif %}
 
                 <label for="confirm-password">Confirm Password:</label>
                 <input type="password" id="confirm-password" name="confirm-password" required>
