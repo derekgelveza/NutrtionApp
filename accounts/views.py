@@ -127,7 +127,8 @@ def registration(request):
             weight=weight
         )
 
-        return redirect('login')
+        login(request, user)
+        return redirect('home')
 
     return render(request, 'accounts/registration.html')
 

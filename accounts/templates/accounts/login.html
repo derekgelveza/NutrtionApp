@@ -23,14 +23,13 @@
         {% csrf_token %}
         <div class="tab active">
           <label for="username">Username:</label>
-          <input type="text" id="username" name="username" required>
+          <input type="text" id="username" name="username" value="{{ request.POST.username }}" required>
 
           <label for="password">Password:</label>
           <input type="password" id="password" name="password" required>
-
-          <p id="login-error" style="color:red; display:none;">
-            Invalid username or password. Please try again.
-          </p>
+          {% if error %}
+            <p style="color:red;">{{error}}</p>
+          {% endif %}
 
           <div class="button-container" style="justify-content: center;">
             <button type="submit" id="loginBtn">Login</button>
