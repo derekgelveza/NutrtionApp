@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from datetime import datetime, date
 from .models import *
-from .utils import calculate_calories
+from .utils import calculate_calories, adjust_calories_for_goal
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import redirect, render
 from django.contrib.auth.hashers import make_password
@@ -21,7 +21,7 @@ def home(request):
         try:
             customer = Customer.objects.get(user=request.user)
         except Customer.DoesNotExist:
-            customer = None
+           return redirect('setup')
 
         calories = None
         if customer:
@@ -33,7 +33,6 @@ def home(request):
                 activity=customer.activity_level.lower()
             )
         
-
     return render(request, 'accounts/home.html', {'calories': calories, 'customer':customer} )
 
 def products(request):
@@ -69,40 +68,19 @@ def registration(request):
         username = str(request.POST.get('username', ''))
         password = str(request.POST.get('password', ''))
         confirm_password = str(request.POST.get('confirm-password', ''))
-        birthday_str = request.POST.get('birthday', '')
-        gender = request.POST.get('gender')
-        height = float(request.POST.get('height', 0))
-        weight = float(request.POST.get('weight', 0))
-        activity = request.POST.get('activity')
-
+        
         if User.objects.filter(username=username).exists():
             errors['username'] = 'Username already taken.'
 
-        # Validate email
         if User.objects.filter(email=email).exists():
             errors['email'] = 'Email already registered.'
 
-        # Validate password match
         if password != confirm_password:
             errors['password'] = 'Passwords do not match.'
 
-        # If there are errors, re-render template with errors
         if errors:
             return render(request, 'accounts/registration.html', {'errors': errors})
 
-        try:
-            height = float(request.POST.get('height', 0))
-            weight = float(request.POST.get('weight', 0))
-        except ValueError:
-            return render(request, 'accounts/registration.html', {'error': 'Invalid height or weight.'})
-
-        age = None
-        if birthday_str:
-            birthday = datetime.strptime(birthday_str, '%Y-%m-%d').date()
-            today = date.today()
-            age = today.year - birthday.year - ((today.month, today.day) < (birthday.month, birthday.day))
-
-            # Create a User first
         user = User.objects.create_user(
             username=username,
             email=email,
@@ -111,24 +89,69 @@ def registration(request):
             last_name=last_name
         )
 
-        # Then create a linked Customer profile
-        customer = Customer.objects.create(
-            user=user,
-            age=age,
-            gender=gender.capitalize(),
-            height=height,
-            weight=weight,
-            activity_level=activity
-        )
-
-            
-        Progress.objects.create(
-            customer=customer,
-            weight=weight
-        )
-
         login(request, user)
-        return redirect('home')
+        return redirect('setup')
 
     return render(request, 'accounts/registration.html')
+
+@login_required(login_url='login')
+@csrf_protect
+def user_setup(request):
+    errors = {}
+
+    if request.method == 'POST':
+        birthday_str = request.POST.get('birthday', '')
+        gender = request.POST.get('gender')
+        activity = request.POST.get('activity')
+        goal = request.POST.get('goal')
+
+        if not birthday_str:
+            errors['birthday'] = 'Birthday is required.'
+        if not gender:
+            errors['gender'] = 'Gender is required.'
+        if not activity:
+            errors['activity'] = 'Activity level is required.'
+        if not goal:
+            errors['goal'] = 'Goal is required.'
+
+        try:
+            height = float(request.POST.get('height', 0))
+            weight = float(request.POST.get('weight', 0))
+            if height <= 0 or weight <= 0:
+                errors['invalid'] = 'Height and weight must be greater than 0.'
+        except ValueError:
+            errors['invalid'] = 'Invalid height or weight.'
+
+        if errors:
+            return render(request, 'accounts/setup.html', {'errors': errors})
+
+        birthday = datetime.strptime(birthday_str, '%Y-%m-%d').date()
+        today = date.today()
+        age = today.year - birthday.year - ((today.month, today.day) < (birthday.month, birthday.day))
+
+        # Calculate calories
+        base_calories = calculate_calories(age, gender.lower(), height, weight, activity.lower())
+        final_calories = adjust_calories_for_goal(base_calories, goal.lower())
+
+        # Create or update Customer profile
+        customer, created = Customer.objects.update_or_create(
+            user=request.user,
+            defaults={
+                'age': age,
+                'gender': gender.capitalize(),
+                'height': height,
+                'weight': weight,
+                'activity_level': activity,
+                'goal': goal,
+                'daily_calories': final_calories
+            }
+        )
+
+        # Create a Progress entry for the first weight if it’s new
+        if created or (customer.weight != weight):
+            Progress.objects.create(customer=customer, weight=weight)
+
+        # Redirect to dashboard or home
+        return redirect('home')
+    return render(request, 'accounts/setup.html')
 

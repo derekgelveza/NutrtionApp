@@ -14,3 +14,11 @@ def calculate_calories(age, gender, height, weight, activity):
     }
     
     return round(bmr * activity_multipliers.get(activity, 1.2))
+
+def adjust_calories_for_goal(calories, goal):
+    if goal == "lose":
+        return calories - 300
+    elif goal == "gain":
+        return calories + 300
+    else:
+        return calories

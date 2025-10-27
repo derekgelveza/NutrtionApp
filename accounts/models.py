@@ -15,15 +15,21 @@ class Customer(models.Model):
         ('Female', 'Female'),
     )
 
+    GOALS = (
+        ('lose', 'Lose Weight'),
+        ('maintain', 'Maintain Weight'),
+        ('gain', 'Gain Weight'),
+    )
 
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
     age = models.IntegerField(null=True)
     gender = models.CharField(max_length=10, choices=GENDER, null=True)
     weight = models.FloatField(null=True)
     height = models.FloatField(null=True)
-    goal = models.CharField(max_length=200, null=True)
     activity_level = models.CharField(max_length=20, choices=ACTIVITY_LEVEL, null=True)
     date_created = models.DateTimeField(auto_now_add=True)
+    goal = models.CharField(max_length=200, choices=GOALS, null=True)
+    daily_calories = models.FloatField(null=True)
 
     def __str__(self):
         if self.user:
