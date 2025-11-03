@@ -25,13 +25,7 @@ def home(request):
 
         calories = None
         if customer:
-            calories = calculate_calories(
-                age=customer.age,
-                gender=customer.gender.lower(),
-                height=customer.height,
-                weight=customer.weight,
-                activity=customer.activity_level.lower()
-            )
+            calories = round(customer.daily_calories)
         
     return render(request, 'accounts/home.html', {'calories': calories, 'customer':customer} )
 
