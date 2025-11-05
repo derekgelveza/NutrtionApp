@@ -1,14 +1,30 @@
 {% extends 'accounts/main.html' %}
+{% load static %}
+
 
 {% block content %}
 
-{% if customer %}
-  <h2>Welcome, {{ customer.user.first_name }}!</h2>
-  <p>Your estimated daily calorie needs: <strong>{{ calories }} kcal</strong></p>
-  <p>Activity level: {{ customer.activity_level }}</p>
-{% else %}
-  <p>No profile found for this user.</p>
-{% endif %}
+<head>
+  <title>Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+  {% if customer %}
+    <h2>Welcome, {{ customer.user.first_name }}!</h2>
+    <p>Daily Calories: {{ calories }}</p>
+    <div style="width: 250px; height: 250px;">
+      <canvas id="macroChart"></canvas>
+    </div>
+    <script src="{% static 'js/dashboard.js' %}"></script>
+    <p>Activity level: {{ customer.activity_level }}</p>
+  {% else %}
+    <p>No profile found for this user.</p>
+  {% endif %}
+  
+</body>
+
+
 
 
 {% endblock %}

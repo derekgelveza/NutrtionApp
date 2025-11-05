@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from datetime import datetime, date
 from .models import *
 from .utils import calculate_calories, adjust_calories_for_goal
+from django.http import JsonResponse
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import redirect, render
 from django.contrib.auth.hashers import make_password
@@ -13,21 +14,35 @@ from django.views.decorators.csrf import csrf_protect
 
 
 @login_required(login_url='login')
-def dashboard(request):
-    customer = None
-    calories = None
+def dashboard_data(request):
+    try:
+        customer = Customer.objects.get(user=request.user)
+    except Customer.DoesNotExist:
+        return redirect('setup')
 
-    if request.user.is_authenticated:
-        try:
-            customer = Customer.objects.get(user=request.user)
-        except Customer.DoesNotExist:
-           return redirect('setup')
+    if not customer.daily_calories:
+        return JsonResponse({'error': 'Daily calories not set'}, status=400)
 
-        calories = None
-        if customer:
-            calories = round(customer.daily_calories)
+    data = {
+        'daily_calories': round(customer.daily_calories),
+        'carbs': round(customer.daily_calories * 0.4) / 4,
+        "protein": round(customer.daily_calories * 0.3) / 4,
+        'fats': round(customer.daily_calories * 0.3) / 9
+    }
         
-    return render(request, 'accounts/dashboard.html', {'calories': calories, 'customer':customer} )
+    return JsonResponse(data)
+
+@login_required(login_url='login')
+def dashboard(request):
+    try:
+        customer = Customer.objects.get(user=request.user)
+    except Customer.DoesNotExist:
+        return redirect('setup')
+    
+    calories = round(customer.daily_calories) if customer.daily_calories else 0
+
+    return render(request, 'accounts/dashboard.html', {'calories': calories, 'customer': customer})
+
 
 def products(request):
     return render(request, 'accounts/products.html')
