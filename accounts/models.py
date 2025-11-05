@@ -38,6 +38,17 @@ class Customer(models.Model):
         return "Unknown Customer"
 
 
+class NutritionalGoal (models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='nutritional_goals')
+    calorie_goal = models.FloatField(null=True)
+    carb_ratio = models.FloatField(default=0.4)
+    protein_ratio = models.FloatField(default=0.3)
+    fat_ratio = models.FloatField(default=3.0)
+    created = models.DateTimeField(auto_now_add=True)
+    is_active = models.BooleanField(default=True)
+
+    def __str__(self):
+        return f"{self.user.username} - {self.calorie_goal} kcal goal"
 
 
 class Progress(models.Model):
