@@ -13,7 +13,7 @@ from django.views.decorators.csrf import csrf_protect
 
 
 @login_required(login_url='login')
-def home(request):
+def dashboard(request):
     customer = None
     calories = None
 
@@ -27,7 +27,7 @@ def home(request):
         if customer:
             calories = round(customer.daily_calories)
         
-    return render(request, 'accounts/home.html', {'calories': calories, 'customer':customer} )
+    return render(request, 'accounts/dashboard.html', {'calories': calories, 'customer':customer} )
 
 def products(request):
     return render(request, 'accounts/products.html')
@@ -43,7 +43,7 @@ def login_view(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)  # logs the user in
-            return redirect('home')  # redirect to personalized home
+            return redirect('dashboard')  # redirect to personalized home
         else:
             return render(request, 'accounts/login.html', {'error': 'Invalid username or password'})
     return render(request, 'accounts/login.html')
@@ -146,6 +146,6 @@ def user_setup(request):
             Progress.objects.create(customer=customer, weight=weight)
 
         # Redirect to dashboard or home
-        return redirect('home')
+        return redirect('dashboard')
     return render(request, 'accounts/setup.html')
 
