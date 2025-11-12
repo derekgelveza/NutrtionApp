@@ -49,7 +49,27 @@ class NutritionalGoal (models.Model):
 
     def __str__(self):
         return f"{self.user.username} - {self.calorie_goal} kcal goal"
+    
 
+class Meals (models.Model):
+    MEAL_TYPES = (
+        ('breakfast', 'Breakfast'),
+        ('lunch', 'Lunch'),
+        ('dinner', 'Dinner'),
+        ('snack', 'Snack'),
+    )
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    meal_type = models.CharField(max_length=20, choices=MEAL_TYPES)
+    name = models.CharField(max_length=100)
+    calories = models.FloatField()
+    carbs = models.FloatField()
+    protein = models.FloatField()
+    fats = models.FloatField()
+    date = models.DateField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user.username} - {self.meal_type} ({self.date})"
 
 class Progress(models.Model):
     customer = models.ForeignKey(Customer, null=True, on_delete=models.SET_NULL)

@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", function() {
                   labels: ['Carbs', 'Protein', 'Fats'],
                   datasets: [{
                       data: [data.carbs, data.protein, data.fats],
-                      backgroundColor: ['#f4a261', '#2a9d8f', '#e76f51'],
+                      backgroundColor: ['#ebdb5eff', '#b437e2ff', '#a2f09bff'],
                   }]
               },
               options: {
