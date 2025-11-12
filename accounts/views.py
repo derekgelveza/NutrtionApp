@@ -23,7 +23,7 @@ def dashboard_data(request):
     if not customer.daily_calories:
         return JsonResponse({'error': 'Daily calories not set'}, status=400)
     
-    meals = Meals.objects.filter(user=request.user, date=date.today)
+    meals = Meals.objects.filter(user=request.user, date=date.today())
     eaten_calories = sum(meal.calories for meal in meals)
     remaining_calories = customer.daily_calories - eaten_calories
 
