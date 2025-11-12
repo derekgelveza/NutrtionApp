@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from datetime import datetime, date
+from .forms import MealForm
 from .models import *
 from .utils import calculate_calories, adjust_calories_for_goal
 from django.http import JsonResponse
@@ -55,6 +56,20 @@ def products(request):
 
 def customer(request):
     return render(request, 'accounts/customer.html')
+
+@login_required(login_url='login')
+def add_meal(request):
+    if request.method == 'POST':
+        form = MealForm(request.POST)
+        if form.is_valid():
+            meal = form.save(commit=False)
+            meal.user = request.user
+            meal.save()
+            return redirect('dashboard')
+    else:
+        form = MealForm()
+
+    return render(request, 'accounts/dashboard.html' , {'form': form})
 
 @csrf_protect
 def login_view(request):

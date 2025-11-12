@@ -1,10 +1,10 @@
 from django import forms
 from .models import Meals
 
-class MealForm(forms.MealForm):
+class MealForm(forms.ModelForm):
     class Meta:
         model = Meals
-        fields = ['meal_type'],['name'],['calories'],['carbs'],['protein'],['fats']
+        fields = ['meal_type', 'name', 'calories', 'carbs', 'protein', 'fats']
         widgets = {
             'meal_type': forms.Select(attrs={'class': 'form-select'}),
             'name': forms.TextInput(attrs={'class': 'form-control'}),

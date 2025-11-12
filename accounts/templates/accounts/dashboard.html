@@ -1,9 +1,7 @@
 {% extends 'accounts/main.html' %}
 {% load static %}
 
-
 {% block content %}
-
 <head>
   <title>Dashboard</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -12,29 +10,40 @@
 <body>
   {% if customer %}
     <h2>Welcome, {{ customer.user.first_name }}!</h2>
-    <p>Daily Calories: {{ calories }}</p>
-    <div style="width: 250px; height: 250px;">
+    <p>Daily Calories: {{ customer.daily_calories }}</p>
+
+    <!-- Macro Chart -->
+    <div style="width: 250px; height: 250px; margin-bottom: 20px;">
       <canvas id="macroChart"></canvas>
     </div>
-    <div style="width:250px; margin-top: 20px;">
+
+    <!-- Calorie Progress Bar -->
+    <div style="width: 250px; margin-bottom: 30px;">
       <div style="display: flex; justify-content: space-between;">
         <span>Eaten: <span id="eatenCalories">0</span></span>
         <span>Remaining: <span id="remainingCalories">0</span></span>
       </div>
       <div style="background-color: #eee; border-radius: 10px; overflow: hidden; height: 20px; margin-top: 5px;">
-        <div id="calorieProgress" style="background-color: #36A2EB; height: 100%; width: 0%; transition: width 0.4s;">
-       </div>
-  </div>
+        <div id="calorieProgress" style="background-color: #36A2EB; height: 100%; width: 0%; transition: width 0.4s;"></div>
+      </div>
     </div>
+
+    <!-- Add Meal Form -->
+    <div style="width: 300px; margin-top: 20px;">
+      <h3>Add a Meal</h3>
+      <form method="POST" action="{% url 'add_meal' %}">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" style="background-color: #4CAF50; color: white; border: none; padding: 8px 12px; border-radius: 5px;">
+          Add Meal
+        </button>
+      </form>
+    </div>
+
+    <!-- JS Script -->
     <script src="{% static 'js/dashboard.js' %}"></script>
   {% else %}
     <p>No profile found for this user.</p>
   {% endif %}
-  
 </body>
-
-
-
-
 {% endblock %}
-
