@@ -12,12 +12,10 @@
     <h2>Welcome, {{ customer.user.first_name }}!</h2>
     <p>Daily Calories: {{ customer.daily_calories }}</p>
 
-    <!-- Macro Chart -->
     <div style="width: 250px; height: 250px; margin-bottom: 20px;">
       <canvas id="macroChart"></canvas>
     </div>
 
-    <!-- Calorie Progress Bar -->
     <div style="width: 250px; margin-bottom: 30px;">
       <div style="display: flex; justify-content: space-between;">
         <span>Eaten: <span id="eatenCalories">0</span></span>
@@ -28,19 +26,15 @@
       </div>
     </div>
 
-    <!-- Add Meal Form -->
     <div style="width: 300px; margin-top: 20px;">
       <h3>Add a Meal</h3>
-      <form method="POST" action="{% url 'add_meal' %}">
+        <form id="addMealForm">
         {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" style="background-color: #4CAF50; color: white; border: none; padding: 8px 12px; border-radius: 5px;">
-          Add Meal
-        </button>
+        {{form.as_p}}
+        <button type="submit" class="btn-submit" style="background-color: #4CAF50; color: white; border: none; padding: 8px 12px; border-radius: 5px;">Add Meal</button>
       </form>
     </div>
 
-    <!-- JS Script -->
     <script src="{% static 'js/dashboard.js' %}"></script>
   {% else %}
     <p>No profile found for this user.</p>

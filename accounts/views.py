@@ -20,18 +20,21 @@ def dashboard_data(request):
         customer = Customer.objects.get(user=request.user)
     except Customer.DoesNotExist:
         return redirect('setup')
+    
+    print("DEBUG: customer.daily_calories =", customer.daily_calories)
 
     if not customer.daily_calories:
         return JsonResponse({'error': 'Daily calories not set'}, status=400)
     
+    daily_calories = round(customer.daily_calories or 0)
     meals = Meals.objects.filter(user=request.user, date=date.today())
-    eaten_calories = sum(meal.calories for meal in meals)
-    remaining_calories = customer.daily_calories - eaten_calories
+    eaten_calories = sum(meal.calories for meal in meals) if meals.exists() else 0
+    remaining_calories = daily_calories - eaten_calories
 
     data = {
-        'daily_calories': round(customer.daily_calories),
-        'eaten_calories': round(eaten_calories),
-        'remaining_calories': round(remaining_calories),
+        'daily_calories': daily_calories,
+        'eaten_calories': eaten_calories,
+        'remaining_calories': remaining_calories,
         'carbs': round(customer.daily_calories * 0.4) / 4,
         "protein": round(customer.daily_calories * 0.3) / 4,
         'fats': round(customer.daily_calories * 0.3) / 9
@@ -48,7 +51,9 @@ def dashboard(request):
     
     calories = round(customer.daily_calories) if customer.daily_calories else 0
 
-    return render(request, 'accounts/dashboard.html', {'calories': calories, 'customer': customer})
+    form = MealForm()
+
+    return render(request, 'accounts/dashboard.html', {'calories': calories, 'customer': customer, 'form': form})
 
 
 def products(request):
@@ -65,9 +70,10 @@ def add_meal(request):
             meal = form.save(commit=False)
             meal.user = request.user
             meal.save()
-            return redirect('dashboard')
-    else:
-        form = MealForm()
+            return JsonResponse({'success': True, 'meal': meal.name})
+        else:
+            return JsonResponse({'success': False, 'errors': form.errors})
+
 
     return render(request, 'accounts/dashboard.html' , {'form': form})
 
