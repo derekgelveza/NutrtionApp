@@ -1,0 +1,74 @@
+/* --- General Layout --- */
+.calorie-container,
+.macro-progress,
+.macro-chart-container,
+.meal-form-container {
+    width: 300px;
+    margin-bottom: 25px;
+}
+
+/* --- Progress Bars --- */
+.progress-bar {
+    width: 100%;
+    height: 20px;
+    background: #e4e4e4;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-top: 6px;
+}
+
+.progress-fill {
+    height: 100%;
+    width: 0%;
+    transition: width 0.4s ease;
+    border-radius: 10px;
+}
+
+/* Colors */
+.calorie-fill {
+    background-color: #36A2EB;
+}
+
+.protein-fill {
+    background-color: #4CAF50;
+}
+
+.carb-fill {
+    background-color: #FFCE56;
+}
+
+.fat-fill {
+    background-color: #FF6384;
+}
+
+/* --- Macro Section Grid --- */
+.macro-section {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* --- Text Formatting --- */
+.macro-progress h3 {
+    margin-bottom: 6px;
+}
+
+/* --- Buttons --- */
+.btn-submit {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.btn-submit:hover {
+    opacity: 0.9;
+}
+
+/* --- Chart Section --- */
+.macro-chart-container {
+    width: 250px;
+    height: 250px;
+}

@@ -1,69 +1,75 @@
 document.addEventListener("DOMContentLoaded", function() {
 
-    // Function to load dashboard data and update UI
     async function loadDashboardData() {
         try {
             const res = await fetch('/dashboard-data/');
             const data = await res.json();
 
-            // Set eaten and remaining calories
+            // ------------------------------
+            // CALORIES
+            // ------------------------------
             const eatenCalories = data.eaten_calories || 0;
-            const remainingCalories = data.daily_calories - eatenCalories;
 
-            // Update DOM elements
             document.getElementById("eatenCalories").textContent = Math.round(eatenCalories);
-            document.getElementById("remainingCalories").textContent = Math.round(remainingCalories); // <-- fixed variable name
+            document.getElementById("remainingCalories").textContent = Math.round(data.remaining_calories);
 
-            // Update progress bar
-            const progressPercent = data.daily_calories > 0
+            const caloriePercent = data.daily_calories > 0
                 ? (eatenCalories / data.daily_calories) * 100
                 : 0;
-            const progressBar = document.getElementById("calorieProgress");
-            progressBar.style.width = `${progressPercent}%`;
 
-            // Doughnut chart
-            const ctx = document.getElementById('macroChart').getContext('2d');
-            if (window.macroChart) window.macroChart.destroy();
+            document.getElementById("calorieProgress").style.width = `${caloriePercent}%`;
 
-            window.macroChart = new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Carbs', 'Protein', 'Fats'],
-                    datasets: [{
-                        data: [data.carbs, data.protein, data.fats],
-                        backgroundColor: ['#ebdb5eff', '#b437e2ff', '#a2f09bff'],
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: { position: 'bottom' }
-                    }
-                }
-            });
+
+            // ------------------------------
+            // MACROS
+            // ------------------------------
+
+            // PROTEIN
+            document.getElementById("proteinEaten").textContent = Math.round(data.protein_total);
+            document.getElementById("proteinRemaining").textContent = Math.round(data.protein_remaining);
+
+            document.getElementById("proteinBar").style.width =
+                `${Math.min((data.protein_total / data.protein_goal) * 100, 100)}%`;
+
+
+            // CARBS
+            document.getElementById("carbsEaten").textContent = Math.round(data.carbs_total);
+            document.getElementById("carbsRemaining").textContent = Math.round(data.carbs_remaining);
+
+            document.getElementById("carbBar").style.width =
+                `${Math.min((data.carbs_total / data.carbs_goal) * 100, 100)}%`;
+
+
+            // FATS
+            document.getElementById("fatsEaten").textContent = Math.round(data.fats_total);
+            document.getElementById("fatsRemaining").textContent = Math.round(data.fats_remaining);
+
+            document.getElementById("fatBar").style.width =
+                `${Math.min((data.fats_total / data.fats_goal) * 100, 100)}%`;
 
         } catch (error) {
             console.error('Error fetching dashboard data:', error);
         }
     }
 
-    // Initial load
     loadDashboardData();
 
-    // Add Meal Form AJAX logic
+    // ------------------------------
+    // ADD MEAL
+    // ------------------------------
     const addMealForm = document.getElementById("addMealForm");
+
     if (addMealForm) {
         addMealForm.addEventListener("submit", async (e) => {
             e.preventDefault();
 
             const formData = new FormData(addMealForm);
-            const csrfToken = formData.get("csrfmiddlewaretoken");
 
             try {
-                const response = await fetch("/add_meal/", {
+                const response = await fetch("/add-meal/", {
                     method: "POST",
-                    headers: {
-                        "X-CSRFToken": csrfToken
+                    headers: { 
+                        "X-CSRFToken": formData.get("csrfmiddlewaretoken") 
                     },
                     body: formData
                 });
@@ -72,11 +78,11 @@ document.addEventListener("DOMContentLoaded", function() {
 
                 if (data.success) {
                     addMealForm.reset();
-                    // Refresh the dashboard data to update eaten/remaining calories
                     loadDashboardData();
                 } else {
-                    alert("Error adding meal: " + JSON.stringify(data.errors));
+                    alert("Error adding meal.");
                 }
+
             } catch (err) {
                 console.error("Error adding meal:", err);
             }

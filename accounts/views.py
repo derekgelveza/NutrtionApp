@@ -20,27 +20,49 @@ def dashboard_data(request):
         customer = Customer.objects.get(user=request.user)
     except Customer.DoesNotExist:
         return redirect('setup')
-    
-    print("DEBUG: customer.daily_calories =", customer.daily_calories)
 
     if not customer.daily_calories:
         return JsonResponse({'error': 'Daily calories not set'}, status=400)
-    
-    daily_calories = round(customer.daily_calories or 0)
+
+    daily_calories = round(customer.daily_calories)
     meals = Meals.objects.filter(user=request.user, date=date.today())
-    eaten_calories = sum(meal.calories for meal in meals) if meals.exists() else 0
-    remaining_calories = daily_calories - eaten_calories
+
+    eaten_calories = sum(meal.calories for meal in meals)
+    
+    # SUM MACROS
+    eaten_protein = sum(meal.protein for meal in meals)
+    eaten_carbs = sum(meal.carbs for meal in meals)
+    eaten_fats = sum(meal.fats for meal in meals)
+
+    # GOALS
+    protein_goal = round(customer.daily_calories * 0.3 / 4)
+    carbs_goal   = round(customer.daily_calories * 0.4 / 4)
+    fats_goal    = round(customer.daily_calories * 0.3 / 9)
 
     data = {
-        'daily_calories': daily_calories,
-        'eaten_calories': eaten_calories,
-        'remaining_calories': remaining_calories,
-        'carbs': round(customer.daily_calories * 0.4) / 4,
-        "protein": round(customer.daily_calories * 0.3) / 4,
-        'fats': round(customer.daily_calories * 0.3) / 9
+        "daily_calories": daily_calories,
+        "eaten_calories": eaten_calories,
+        "remaining_calories": daily_calories - eaten_calories,
+
+        # GOALS
+        "protein_goal": protein_goal,
+        "carbs_goal": carbs_goal,
+        "fats_goal": fats_goal,
+
+        # EATEN
+        "protein_total": eaten_protein,
+        "carbs_total": eaten_carbs,
+        "fats_total": eaten_fats,
+
+        # REMAINING
+        "protein_remaining": protein_goal - eaten_protein,
+        "carbs_remaining": carbs_goal - eaten_carbs,
+        "fats_remaining": fats_goal - eaten_fats,
     }
-        
+
     return JsonResponse(data)
+
+
 
 @login_required(login_url='login')
 def dashboard(request):

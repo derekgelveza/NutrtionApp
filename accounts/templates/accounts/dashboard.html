@@ -4,38 +4,73 @@
 {% block content %}
 <head>
   <title>Dashboard</title>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
 </head>
 
 <body>
   {% if customer %}
     <h2>Welcome, {{ customer.user.first_name }}!</h2>
-    <p>Daily Calories: {{ customer.daily_calories }}</p>
+    <p>Calorie Goal: {{ customer.daily_calories }}</p>
 
-    <div style="width: 250px; height: 250px; margin-bottom: 20px;">
-      <canvas id="macroChart"></canvas>
-    </div>
-
-    <div style="width: 250px; margin-bottom: 30px;">
-      <div style="display: flex; justify-content: space-between;">
+    <!-- CALORIES PROGRESS -->
+    <div class="calorie-container">
+      <div class="calorie-info">
         <span>Eaten: <span id="eatenCalories">0</span></span>
         <span>Remaining: <span id="remainingCalories">0</span></span>
       </div>
-      <div style="background-color: #eee; border-radius: 10px; overflow: hidden; height: 20px; margin-top: 5px;">
-        <div id="calorieProgress" style="background-color: #36A2EB; height: 100%; width: 0%; transition: width 0.4s;"></div>
+
+      <div class="progress-bar">
+        <div id="calorieProgress" class="progress-fill calorie-fill"></div>
       </div>
     </div>
 
-    <div style="width: 300px; margin-top: 20px;">
+    <!-- MACRO PROGRESS BARS -->
+    <div class="macro-section">
+
+      <div class="macro-progress">
+        <h3>Protein</h3>
+        <div class="progress-bar">
+          <div id="proteinBar" class="progress-fill protein-fill"></div>
+        </div>
+        <p><span id="proteinEaten">0</span>g eaten • <span id="proteinRemaining">0</span>g remaining</p>
+      </div>
+
+      <div class="macro-progress">
+        <h3>Carbs</h3>
+        <div class="progress-bar">
+          <div id="carbBar" class="progress-fill carb-fill"></div>
+        </div>
+        <p><span id="carbsEaten">0</span>g eaten • <span id="carbsRemaining">0</span>g remaining</p>
+      </div>
+
+      <div class="macro-progress">
+        <h3>Fats</h3>
+        <div class="progress-bar">
+          <div id="fatBar" class="progress-fill fat-fill"></div>
+        </div>
+        <p><span id="fatsEaten">0</span>g eaten • <span id="fatsRemaining">0</span>g remaining</p>
+      </div>
+
+    </div>
+
+    <!-- REMOVE THIS IF YOU NO LONGER WANT A DONUT CHART -->
+    <div class="macro-chart-container">
+      <canvas id="macroChart"></canvas>
+    </div>
+
+    <!-- MEAL FORM -->
+    <div class="meal-form-container">
       <h3>Add a Meal</h3>
-        <form id="addMealForm">
+
+      <form id="addMealForm">
         {% csrf_token %}
-        {{form.as_p}}
-        <button type="submit" class="btn-submit" style="background-color: #4CAF50; color: white; border: none; padding: 8px 12px; border-radius: 5px;">Add Meal</button>
+        {{ form.as_p }}
+        <button type="submit" class="btn-submit">Add Meal</button>
       </form>
     </div>
 
     <script src="{% static 'js/dashboard.js' %}"></script>
+
   {% else %}
     <p>No profile found for this user.</p>
   {% endif %}
