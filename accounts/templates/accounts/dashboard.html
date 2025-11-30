@@ -1,78 +1,105 @@
-{% extends 'accounts/main.html' %}
+
 {% load static %}
 
 {% block content %}
 <head>
   <title>Dashboard</title>
   <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+  <script src="{% static 'js/dashboard.js' %}" defer></script>
 </head>
 
+  <header>
+      <img src="{% static 'images/logo.png' %}" alt="Logo">
+      <nav>
+        <a href="{% url 'dashboard' %}">Home</a>
+        <a href="#">Fridge</a>
+        <a href="#">Settings</a>
+        <a href="{% url 'logout' %}">Logout</a>
+      </nav>
+  </header>
+
 <body>
-  {% if customer %}
-    <h2>Welcome, {{ customer.user.first_name }}!</h2>
-    <p>Calorie Goal: {{ customer.daily_calories }}</p>
+  <main>
+    {% if customer %}
+      <h2>Welcome, {{ customer.user.first_name }}!</h2>
+      <p>Calorie Goal: {{ customer.daily_calories }}</p>
 
-    <!-- CALORIES PROGRESS -->
-    <div class="calorie-container">
-      <div class="calorie-info">
-        <span>Eaten: <span id="eatenCalories">0</span></span>
-        <span>Remaining: <span id="remainingCalories">0</span></span>
+      <div class="date-nav">
+        <button id="prevDay" class="date-btn">←</button>
+        <span id="selectedDate"></span>
+        <button id="nextDay" class="date-btn">→</button>
       </div>
 
-      <div class="progress-bar">
-        <div id="calorieProgress" class="progress-fill calorie-fill"></div>
-      </div>
-    </div>
 
-    <!-- MACRO PROGRESS BARS -->
-    <div class="macro-section">
 
-      <div class="macro-progress">
-        <h3>Protein</h3>
-        <div class="progress-bar">
-          <div id="proteinBar" class="progress-fill protein-fill"></div>
+      <div class="dashboard-container">
+        <!-- --- MACRO & CALORIE PROGRESS SECTION --- -->
+        <div class="macro-section">
+
+          <!-- CALORIES -->
+          <div class="macro-progress">
+            <h3>Calories</h3>
+            <div class="progress-bar">
+              <div id="calorieProgress" class="progress-fill calorie-fill"></div>
+            </div>
+            <p>
+              <span id="eatenCalories">0</span> kcal eaten 
+              <span id="remainingCalories">0</span> kcal remaining
+            </p>
+          </div>
+
+          <!-- PROTEIN -->
+          <div class="macro-progress">
+            <h3>Protein</h3>
+            <div class="progress-bar">
+              <div id="proteinBar" class="progress-fill protein-fill"></div>
+            </div>
+            <p>
+              <span id="proteinEaten">0</span>g eaten 
+              <span id="proteinRemaining">0</span>g remaining
+            </p>
+          </div>
+
+          <!-- CARBS -->
+          <div class="macro-progress">
+            <h3>Carbs</h3>
+            <div class="progress-bar">
+              <div id="carbBar" class="progress-fill carb-fill"></div>
+            </div>
+            <p>
+              <span id="carbsEaten">0</span>g eaten 
+              <span id="carbsRemaining">0</span>g remaining
+            </p>
+          </div>
+
+          <!-- FATS -->
+          <div class="macro-progress">
+            <h3>Fats</h3>
+            <div class="progress-bar">
+              <div id="fatBar" class="progress-fill fat-fill"></div>
+            </div>
+            <p>
+              <span id="fatsEaten">0</span>g eaten 
+              <span id="fatsRemaining">0</span>g remaining
+            </p>
+          </div>
+
         </div>
-        <p><span id="proteinEaten">0</span>g eaten • <span id="proteinRemaining">0</span>g remaining</p>
-      </div>
 
-      <div class="macro-progress">
-        <h3>Carbs</h3>
-        <div class="progress-bar">
-          <div id="carbBar" class="progress-fill carb-fill"></div>
+        <!-- --- MEAL FORM --- -->
+        <div class="meal-form-container">
+          <h3>Add a Meal</h3>
+          <form id="addMealForm">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn-submit">Add Meal</button>
+          </form>
         </div>
-        <p><span id="carbsEaten">0</span>g eaten • <span id="carbsRemaining">0</span>g remaining</p>
       </div>
 
-      <div class="macro-progress">
-        <h3>Fats</h3>
-        <div class="progress-bar">
-          <div id="fatBar" class="progress-fill fat-fill"></div>
-        </div>
-        <p><span id="fatsEaten">0</span>g eaten • <span id="fatsRemaining">0</span>g remaining</p>
-      </div>
-
-    </div>
-
-    <!-- REMOVE THIS IF YOU NO LONGER WANT A DONUT CHART -->
-    <div class="macro-chart-container">
-      <canvas id="macroChart"></canvas>
-    </div>
-
-    <!-- MEAL FORM -->
-    <div class="meal-form-container">
-      <h3>Add a Meal</h3>
-
-      <form id="addMealForm">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn-submit">Add Meal</button>
-      </form>
-    </div>
-
-    <script src="{% static 'js/dashboard.js' %}"></script>
-
-  {% else %}
-    <p>No profile found for this user.</p>
-  {% endif %}
+    {% else %}
+      <p>No profile found for this user.</p>
+    {% endif %}
+  </main>  
 </body>
 {% endblock %}

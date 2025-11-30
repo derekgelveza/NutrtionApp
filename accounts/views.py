@@ -24,11 +24,23 @@ def dashboard_data(request):
     if not customer.daily_calories:
         return JsonResponse({'error': 'Daily calories not set'}, status=400)
 
+    # --- Get the selected date from query params ---
+    date_str = request.GET.get('date')
+    if date_str:
+        try:
+            selected_date = datetime.strptime(date_str, '%Y-%m-%d').date()
+        except ValueError:
+            selected_date = date.today()
+    else:
+        selected_date = date.today()
+
     daily_calories = round(customer.daily_calories)
-    meals = Meals.objects.filter(user=request.user, date=date.today())
+
+    # --- Filter meals by the selected date ---
+    meals = Meals.objects.filter(user=request.user, date=selected_date)
 
     eaten_calories = sum(meal.calories for meal in meals)
-    
+
     # SUM MACROS
     eaten_protein = sum(meal.protein for meal in meals)
     eaten_carbs = sum(meal.carbs for meal in meals)
@@ -91,6 +103,7 @@ def add_meal(request):
         if form.is_valid():
             meal = form.save(commit=False)
             meal.user = request.user
+            meal.date = date.today()
             meal.save()
             return JsonResponse({'success': True, 'meal': meal.name})
         else:

@@ -17,17 +17,16 @@
         </nav>
     </header>
 
-    <main class="main-content">
+     <main class="main-content">
         <div class="registration-container">
             <h1>Setup Your Profile</h1>
 
             <form method="POST" action="{% url 'setup' %}" id="setup-form">
                 {% csrf_token %}
 
-                <!-- Step 1: Birthday & Gender -->
-                <div class="tab active">
-                    <h2>Birthday and Gender</h2>
-
+                <!-- Single-step form -->
+                <div class="setup-fields">
+                    <!-- Birthday & Gender -->
                     <label for="birthday">Birthday:</label>
                     <input type="date" id="birthday" name="birthday" required>
                     {% if errors.birthday %}
@@ -40,12 +39,8 @@
                     {% if errors.gender %}
                         <p style="color:red;">{{ errors.gender }}</p>
                     {% endif %}
-                </div>
 
-                <!-- Step 2: Height, Weight, Activity -->
-                <div class="tab">
-                    <h2>Height, Weight, and Activity</h2>
-
+                    <!-- Height & Weight -->
                     <label for="height">Height (cm):</label>
                     <input type="number" id="height" name="height" required>
 
@@ -61,19 +56,15 @@
                         <option value="active">Active (6-7 days/week)</option>
                         <option value="very-active">Very Active (hard exercise daily)</option>
                     </select>
-
                     {% if errors.activity %}
                         <p style="color:red;">{{ errors.activity }}</p>
                     {% endif %}
                     {% if errors.invalid %}
                         <p style="color:red;">{{ errors.invalid }}</p>
                     {% endif %}
-                </div>
 
-                <!-- Step 3: Goal -->
-                <div class="tab">
-                    <h2>Weight Goal</h2>
-                    <label for="goal">Choose your goal:</label>
+                    <!-- Goal -->
+                    <label for="goal">Weight Goal:</label>
                     <select name="goal" id="goal" required>
                         <option value="">-- Select your goal --</option>
                         <option value="lose">Lose Weight</option>
@@ -83,12 +74,14 @@
                     {% if errors.goal %}
                         <p style="color:red;">{{ errors.goal }}</p>
                     {% endif %}
+
+                    <!-- Number of Meals -->
+                    <label for="meals_per_day">Number of meals per day:</label>
+                    <input type="number" id="meals_per_day" name="meals_per_day" min="1" value="3" required>
                 </div>
 
                 <div class="button-container">
-                    <button type="button" id="prevBtn">Previous</button>
-                    <button type="button" id="nextBtn">Next</button>
-                    <button type="submit" id="submitBtn" style="display:none;">Submit</button>
+                    <button type="submit" class="btn-submit">Submit</button>
                 </div>
             </form>
         </div>
