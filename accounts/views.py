@@ -226,3 +226,9 @@ def user_setup(request):
         return redirect('dashboard')
     return render(request, 'accounts/setup.html')
 
+
+@login_required(login_url='login')
+def fridgeAi(request):
+    
+    return render(request, 'accounts/fridgeAi.html')
+

@@ -12,5 +12,6 @@ urlpatterns = [
     path('register/', views.registration, name='registration'),
     path('logout/', views.logout_view, name='logout'),
     path('setup/', views.user_setup, name='setup'),
+    path('fridgeAi/', views.fridgeAi, name='fridgeAi'),
 
 ]

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+     <header>
+      <img src="#" alt="Logo">
+      <nav>
+        <a href="{% url 'dashboard' %}">Home</a>
+        <a href="{% url 'fridgeAi' %}">Fridge</a>
+        <a href="#">Settings</a>
+        <a href="{% url 'logout' %}">Logout</a>
+      </nav>
+    </header>
+
+    <main>
+
+        <form method="POST">
+        {% csrf_token %}
+        <textarea name="ingredients" placeholder="List your foods"></textarea>
+        <button type="submit">Generate Meals</button>
+        </form>
+
+        {% if meals %}
+        <h2>Suggested Meals</h2>
+        <ul>
+            {% for meal in meals %}
+            <li>{{ meal.name }} - {{ meal.calories }} cal, {{ meal.protein }}g protein</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </main>
+
+    
+</body>
+</html>
