@@ -1,6 +1,6 @@
-// fridgeAi.js
+
 document.addEventListener("DOMContentLoaded", () => {
-  // ---------- Helpers ----------
+
   function getCookie(name) {
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${name}=`);
@@ -25,13 +25,13 @@ document.addEventListener("DOMContentLoaded", () => {
       .replace(/'/g, "&#039;");
   }
 
-  // ---------- DOM references ----------
+
   const ingredientsInput = document.getElementById("ingredientsInput");
   const generateBtn = document.getElementById("generateMealsBtn");
   const mealsContainer = document.getElementById("mealsContainer");
   const messageEl = document.getElementById("message");
 
-  // ---------- UI helpers ----------
+
   function showMessage(msg, type = "info") {
     messageEl.textContent = msg;
     messageEl.className = type;
@@ -64,7 +64,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // ---------- Event ----------
+
   generateBtn.addEventListener("click", async () => {
     const ingredients = ingredientsInput.value.trim();
     if (!ingredients) {

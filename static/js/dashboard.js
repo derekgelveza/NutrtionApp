@@ -1,12 +1,12 @@
 // dashboard.js
 document.addEventListener("DOMContentLoaded", () => {
-  // ---------- Utilities ----------
+
   function formatDate(dateObj) {
-    return dateObj.toISOString().slice(0, 10); // YYYY-MM-DD
+    return dateObj.toISOString().slice(0, 10); 
   }
 
   function getCookie(name) {
-    // standard Django csrftoken helper
+
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${name}=`);
     if (parts.length === 2) return parts.pop().split(';').shift();
@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function getCSRFToken() {
-    // Prefer cookie, otherwise look for a csrf input in the page
+
     const cookie = getCookie('csrftoken');
     if (cookie) return cookie;
     const el = document.querySelector("[name=csrfmiddlewaretoken]");
@@ -26,16 +26,16 @@ document.addEventListener("DOMContentLoaded", () => {
     return Number.isFinite(n) ? n : 0;
   }
 
-  // ---------- State ----------
-  let currentDate = new Date();
-  let mealsCache = []; // latest meals list from server
 
-  // ---------- DOM refs ----------
+  let currentDate = new Date();
+  let mealsCache = []; 
+
+
   const selectedDateSpan = document.getElementById("selectedDate");
   const prevBtn = document.getElementById("prevDay");
   const nextBtn = document.getElementById("nextDay");
 
-  // macro elements
+
   const eatenCaloriesEl = document.getElementById("eatenCalories");
   const remainingCaloriesEl = document.getElementById("remainingCalories");
   const calorieProgressEl = document.getElementById("calorieProgress");
@@ -52,16 +52,16 @@ document.addEventListener("DOMContentLoaded", () => {
   const fatsRemainingEl = document.getElementById("fatsRemaining");
   const fatBarEl = document.getElementById("fatBar");
 
-  // meals list + add button
+
   const mealsContainer = document.getElementById("mealsContainer");
-  // open add modal button: if you follow earlier suggestion it's #openAddModal
+
   const openAddModalBtn = document.getElementById("openAddModal");
 
-  // ---------- Modal elements (make sure these IDs exist in your template) ----------
-  const mealModal = document.getElementById("mealModal"); // modal wrapper
+
+  const mealModal = document.getElementById("mealModal"); 
   const modalTitle = document.getElementById("modalTitle");
   const mealForm = document.getElementById("mealForm");
-  const mealIdInput = document.getElementById("mealId"); // hidden input for edit id
+  const mealIdInput = document.getElementById("mealId");
   const mealNameInput = document.getElementById("mealName");
   const mealCaloriesInput = document.getElementById("mealCalories");
   const mealProteinInput = document.getElementById("mealProtein");
@@ -69,7 +69,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const mealFatsInput = document.getElementById("mealFats");
   const closeModalBtn = document.getElementById("closeModal");
 
-  // ---------- UI helpers ----------
+
   function updateDisplayedDate() {
     selectedDateSpan.textContent = currentDate.toLocaleDateString("en-US", {
       month: "long",
@@ -79,7 +79,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function showModal(mode = "add", meal = null) {
-    // mode: "add" or "edit"
+
     if (mode === "add") {
       modalTitle.textContent = "Add Meal";
       mealIdInput.value = "";
@@ -94,7 +94,7 @@ document.addEventListener("DOMContentLoaded", () => {
       mealFatsInput.value = meal.fats ?? "";
     }
     mealModal.classList.remove("hidden");
-    // focus first field
+
     setTimeout(() => mealNameInput.focus(), 60);
   }
 
@@ -114,7 +114,7 @@ document.addEventListener("DOMContentLoaded", () => {
     meals.forEach((meal) => {
       const li = document.createElement("li");
       li.className = "meal-row";
-      // structure with buttons
+
       li.innerHTML = `
         <div class="meal-info">
           <strong class="meal-name">${escapeHtml(meal.name)}</strong>
@@ -146,9 +146,9 @@ document.addEventListener("DOMContentLoaded", () => {
       .replace(/'/g, "&#039;");
   }
 
-  // ---------- Attach event listeners to meal buttons ----------
+
   function attachMealEventListeners() {
-    // Edit buttons
+
     const editButtons = mealsContainer.querySelectorAll(".edit-btn");
     editButtons.forEach((btn) =>
       btn.addEventListener("click", (e) => {
@@ -162,7 +162,7 @@ document.addEventListener("DOMContentLoaded", () => {
       })
     );
 
-    // Delete buttons
+
     const delButtons = mealsContainer.querySelectorAll(".delete-btn");
     delButtons.forEach((btn) =>
       btn.addEventListener("click", async (e) => {
@@ -177,7 +177,7 @@ document.addEventListener("DOMContentLoaded", () => {
           });
           const json = await res.json();
           if (json.success) {
-            await loadDashboardData(); // refresh macros + meals
+            await loadDashboardData();
           } else {
             console.error("Delete failed:", json);
             alert("Could not delete meal.");
@@ -190,7 +190,7 @@ document.addEventListener("DOMContentLoaded", () => {
     );
   }
 
-  // ---------- Load macro + meals from server ----------
+
   async function loadDashboardData() {
     try {
       const dateString = formatDate(currentDate);
@@ -201,7 +201,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
       const data = await res.json();
 
-      // Update macro DOM
+
       const eatenCalories = numberOrZero(data.eaten_calories);
       const dailyCalories = numberOrZero(data.daily_calories);
 
@@ -211,7 +211,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const caloriePct = dailyCalories > 0 ? (eatenCalories / dailyCalories) * 100 : 0;
       calorieProgressEl.style.width = `${Math.min(caloriePct, 100)}%`;
 
-      // protein
+
       const proteinTotal = numberOrZero(data.protein_total);
       const proteinRemaining = numberOrZero(data.protein_remaining);
       proteinEatenEl.textContent = Math.round(proteinTotal);
@@ -221,7 +221,7 @@ document.addEventListener("DOMContentLoaded", () => {
         data.protein_goal ? (proteinTotal / data.protein_goal) * 100 : 0
       )}%`;
 
-      // carbs
+
       const carbsTotal = numberOrZero(data.carbs_total);
       const carbsRemaining = numberOrZero(data.carbs_remaining);
       carbsEatenEl.textContent = Math.round(carbsTotal);
@@ -231,7 +231,7 @@ document.addEventListener("DOMContentLoaded", () => {
         data.carbs_goal ? (carbsTotal / data.carbs_goal) * 100 : 0
       )}%`;
 
-      // fats
+
       const fatsTotal = numberOrZero(data.fats_total);
       const fatsRemaining = numberOrZero(data.fats_remaining);
       fatsEatenEl.textContent = Math.round(fatsTotal);
@@ -241,7 +241,7 @@ document.addEventListener("DOMContentLoaded", () => {
         data.fats_goal ? (fatsTotal / data.fats_goal) * 100 : 0
       )}%`;
 
-      // Meals list
+
       mealsCache = Array.isArray(data.meals) ? data.meals : [];
       renderMealsList(mealsCache);
     } catch (err) {
@@ -249,7 +249,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // ---------- Submit add/edit via modal ----------
+
   mealForm.addEventListener("submit", async (e) => {
     e.preventDefault();
 
@@ -260,11 +260,11 @@ document.addEventListener("DOMContentLoaded", () => {
       protein: Number(mealProteinInput.value) || 0,
       carbs: Number(mealCarbsInput.value) || 0,
       fats: Number(mealFatsInput.value) || 0,
-      date: formatDate(currentDate), // server handles date/user
+      date: formatDate(currentDate), 
       meal_type: document.getElementById("mealType").value
     };
 
-    // Basic validation
+
     if (!payload.name) {
       alert("Please enter a name for the meal.");
       mealNameInput.focus();
@@ -285,7 +285,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const json = await res.json();
       if (json.success) {
         hideModal();
-        // reload data for the current date
+
         await loadDashboardData();
       } else {
         console.error("Save failed:", json);
@@ -297,7 +297,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // ---------- Modal open/close handlers ----------
+
   if (openAddModalBtn) {
     openAddModalBtn.addEventListener("click", () => showModal("add", null));
   }
@@ -306,14 +306,14 @@ document.addEventListener("DOMContentLoaded", () => {
     closeModalBtn.addEventListener("click", hideModal);
   }
 
-  // close modal if clicking overlay (but not if clicking inside modal content)
+
   if (mealModal) {
     mealModal.addEventListener("click", (e) => {
       if (e.target === mealModal) hideModal();
     });
   }
 
-  // ---------- Date navigation ----------
+
   if (prevBtn) {
     prevBtn.addEventListener("click", () => {
       currentDate.setDate(currentDate.getDate() - 1);
@@ -329,14 +329,14 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // keyboard: Esc closes modal
+
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape" && mealModal && !mealModal.classList.contains("hidden")) {
       hideModal();
     }
   });
 
-  // ---------- Initial load ----------
+
   updateDisplayedDate();
   loadDashboardData();
 });

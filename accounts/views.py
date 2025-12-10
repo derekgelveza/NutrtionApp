@@ -29,7 +29,7 @@ def dashboard_data(request):
     if not customer.daily_calories:
         return JsonResponse({'error': 'Daily calories not set'}, status=400)
 
-    # --- Get selected date ---
+
     date_str = request.GET.get('date')
     if date_str:
         try:
@@ -68,7 +68,7 @@ def dashboard_data(request):
         "carbs_remaining": carbs_goal - eaten_carbs,
         "fats_remaining": fats_goal - eaten_fats,
 
-        # ⭐ NEW ⭐
+
         "meals": [
             {
                 "id": meal.id,
@@ -200,8 +200,8 @@ def login_view(request):
     return render(request, 'accounts/login.html')
 
 def logout_view(request):
-    logout(request)  # clears the session
-    return redirect('login')  # redirect to your login page
+    logout(request) 
+    return redirect('login')
 
 def registration(request):
     errors = {}
