@@ -82,11 +82,11 @@ nav a:hover {
 }
 
 .dashboard-container {
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
     gap: 20px;
-    justify-content: center;
-    align-items: stretch; /* makes children same height */
     margin-bottom: 25px;
+    justify-content: center;
 }
 
 /* --- Macro / Dashboard Section --- */
@@ -188,4 +188,163 @@ nav a:hover {
     flex-direction: column;
     align-items: center;
     gap: 20px;
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal.hidden {
+  display: none;
+}
+
+.modal-content {
+  background: #fff;
+  padding: 20px;
+  width: 350px;
+  border-radius: 12px;
+}
+
+.modal-content input {
+  width: 100%;
+  padding: 6px;
+  margin-bottom: 10px;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: space-between;
+}
+
+/* --- Meals Card --- */
+.meals-card {
+    width: 500px;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 420px; /* ensures scroll when many meals */
+}
+
+.meals-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.meals-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    overflow-y: auto;
+}
+
+/* Scroll bar small + clean */
+.meals-list::-webkit-scrollbar {
+    width: 6px;
+}
+.meals-list::-webkit-scrollbar-thumb {
+    background: #c7c7c7;
+    border-radius: 3px;
+}
+
+.meal-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 6px;
+    border-bottom: 1px solid #eee;
+}
+
+.meal-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.meal-name {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.meal-macros {
+    font-size: 13px;
+    color: #666;
+    margin-top: 2px;
+}
+
+.meal-actions {
+    display: flex;
+    gap: 6px;
+}
+
+.btn-small {
+    border: none;
+    background: transparent;
+    font-size: 18px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.btn-small:hover {
+    opacity: 0.7;
+}
+
+/* --- Modal Enhanced Layout --- */
+.modal-content {
+    background: #fff;
+    width: 420px; /* more room */
+    border-radius: 12px;
+    padding: 18px;
+}
+
+/* 2-column grid for inputs */
+#mealForm {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+}
+
+#mealForm label {
+    grid-column: span 1;
+    font-size: 14px;
+}
+
+#mealForm input {
+    grid-column: span 1;
+    width: 100%;
+    padding: 8px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+
+/* Action buttons full row */
+.modal-actions {
+    grid-column: span 2;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.btn-cancel {
+    background: #999;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 14px;
+    cursor: pointer;
+}
+
+.btn-cancel:hover {
+    background: #777;
 }

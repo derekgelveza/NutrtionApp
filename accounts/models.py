@@ -66,7 +66,7 @@ class Meals (models.Model):
     carbs = models.FloatField()
     protein = models.FloatField()
     fats = models.FloatField()
-    date = models.DateField(auto_now_add=True)
+    date = models.DateField()
 
     def __str__(self):
         return f"{self.user.username} - {self.meal_type} ({self.date})"

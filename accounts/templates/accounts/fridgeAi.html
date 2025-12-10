@@ -1,40 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="{% static 'js/fridgeAi.js' %}" defer></script>
+  <title>Fridge AI - Meal Ideas</title>
 </head>
 <body>
+  <header>
+    <img src="#" alt="Logo">
+    <nav>
+      <a href="{% url 'dashboard' %}">Home</a>
+      <a href="{% url 'fridgeAi' %}">Fridge</a>
+      <a href="#">Settings</a>
+      <a href="{% url 'logout' %}">Logout</a>
+    </nav>
+  </header>
 
-     <header>
-      <img src="#" alt="Logo">
-      <nav>
-        <a href="{% url 'dashboard' %}">Home</a>
-        <a href="{% url 'fridgeAi' %}">Fridge</a>
-        <a href="#">Settings</a>
-        <a href="{% url 'logout' %}">Logout</a>
-      </nav>
-    </header>
+  <main class="container">
+    <h1>Fridge AI - Meal Ideas</h1>
 
-    <main>
+    <!-- Ingredients input -->
+    <div class="input-group">
+      <label for="ingredientsInput">Enter your ingredients (comma separated):</label>
+      <input type="text" id="ingredientsInput" placeholder="e.g., chicken, rice, broccoli">
+      <button id="generateMealsBtn">Generate Meals</button>
+    </div>
 
-        <form method="POST">
-        {% csrf_token %}
-        <textarea name="ingredients" placeholder="List your foods"></textarea>
-        <button type="submit">Generate Meals</button>
-        </form>
+    <h2>Suggested Meals</h2>
+    <ul id="mealsContainer">
+      
+    </ul>
 
-        {% if meals %}
-        <h2>Suggested Meals</h2>
-        <ul>
-            {% for meal in meals %}
-            <li>{{ meal.name }} - {{ meal.calories }} cal, {{ meal.protein }}g protein</li>
-            {% endfor %}
-        </ul>
-        {% endif %}
-    </main>
+    <div id="message" class="hidden"></div>
+  </main>
 
-    
+  
 </body>
 </html>

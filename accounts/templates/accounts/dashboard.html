@@ -86,15 +86,57 @@
 
         </div>
 
-        <!-- --- MEAL FORM --- -->
-        <div class="meal-form-container">
-          <h3>Add a Meal</h3>
-          <form id="addMealForm">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit" class="btn-submit">Add Meal</button>
-          </form>
+        <!-- CENTER: MEALS LIST -->
+        <div class="meals-card">
+          <div class="meals-header">
+            <h3>Meals for this Day</h3>
+            <button id="openAddModal" class="btn-submit">+ Add Meal</button>
+          </div>
+
+          <ul id="mealsContainer" class="meals-list"></ul>
         </div>
+      
+        <!-- Meal Modal -->
+        <div id="mealModal" class="modal hidden">
+          <div class="modal-content">
+            <h3 id="modalTitle">Add Meal</h3>
+
+            <form id="mealForm">
+              {% csrf_token %}
+              <input type="hidden" id="mealId">
+
+              <label>Meal Type</label>
+              <select id="mealType" required>
+                <option value="">Select</option>
+                <option value="breakfast">Breakfast</option>
+                <option value="lunch">Lunch</option>
+                <option value="dinner">Dinner</option>
+                <option value="snack">Snack</option>
+              </select>
+
+              <label>Name</label>
+              <input type="text" id="mealName" required>
+
+              <label>Calories</label>
+              <input type="number" id="mealCalories" required>
+
+              <label>Protein (g)</label>
+              <input type="number" id="mealProtein" required>
+
+              <label>Carbs (g)</label>
+              <input type="number" id="mealCarbs" required>
+
+              <label>Fats (g)</label>
+              <input type="number" id="mealFats" required>
+
+              <div class="modal-actions">
+                <button type="submit" class="btn-submit">Save</button>
+                <button type="button" id="closeModal" class="btn-cancel">Cancel</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
       </div>
 
     {% else %}
